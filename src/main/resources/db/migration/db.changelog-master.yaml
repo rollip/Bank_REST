@@ -1,0 +1,9 @@
+databaseChangeLog:
+      - include:
+          file: v1/1-create-users-table.yaml
+          relativeToChangelogFile: true
+      - include:
+          file: v1/2-create-cards-table-and-fk.yaml
+          relativeToChangelogFile: true
+
+
