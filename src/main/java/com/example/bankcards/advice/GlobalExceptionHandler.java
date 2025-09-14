@@ -1,10 +1,6 @@
 package com.example.bankcards.advice;
 
-import com.example.bankcards.exception.CardException;
-import com.example.bankcards.exception.CardBlockTicketException;
-import com.example.bankcards.exception.TransferException;
-import com.example.bankcards.exception.UserException;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.bankcards.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,7 +22,7 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", exception.getMessage()));
     }
 
-    @ExceptionHandler({LoginException.class})
+    @ExceptionHandler(LoginException.class)
     public ResponseEntity<Map<String, String>> handle(LoginException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -40,8 +36,8 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", ex.getMessage()));
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleEntityNotFound(EntityNotFoundException ex) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleEntityNotFound(NotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", ex.getMessage()));
