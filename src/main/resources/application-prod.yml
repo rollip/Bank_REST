@@ -1,15 +1,15 @@
 application:
-  no-auth-endpoints: "/swagger-ui/**,/swagger-resources/*,/v3/api-docs/**,/auth/**"
+  no-auth-endpoints: "/auth/**"
   authentication:
-    signing-key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
+    signing-key: 7bfa83f908ca8aa761cb0bf199213a0e5d67b0c74402d9f9eb2d90b49b879f8e
     jwt-expiration-time: 600
   card:
     number:
       length: 16
     expiry-period-years: 4
     encryption:
-      key: 98d05327033af07fbae4774fa1a45d1f
-      salt: cd30997262cc4e49fe7597391e59a0c8
+      key: 658d696ada91791a8e074017c50f6faa
+      salt: 2c49619184a5e96a2152f1510a1b4bbd
 
 spring:
   datasource:
@@ -26,6 +26,6 @@ spring:
 
 springdoc:
   api-docs:
-    enabled: true
+    enabled: false
   swagger-ui:
-    enabled: true
+    enabled: false
