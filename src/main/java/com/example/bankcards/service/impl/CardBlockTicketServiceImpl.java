@@ -7,7 +7,7 @@ import com.example.bankcards.exception.CardBlockTicketException;
 import com.example.bankcards.repository.CardBlockTicketRepository;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.service.CardBlockTicketService;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.bankcards.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class CardBlockTicketServiceImpl implements CardBlockTicketService {
     @Override
     public CardBlockTicketEntity create(Long cardId) {
         CardEntity card = cardRepository.findById(cardId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(NotFoundException::new);
 
         checkNoPendingTicket(cardId);
 
@@ -35,7 +35,7 @@ public class CardBlockTicketServiceImpl implements CardBlockTicketService {
     @Override
     public CardBlockTicketEntity get(Long id) {
         return ticketRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(NotFoundException::new);
     }
 
     @Override

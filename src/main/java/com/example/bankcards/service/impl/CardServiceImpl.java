@@ -5,6 +5,7 @@ import com.example.bankcards.entity.CardEntity;
 import com.example.bankcards.entity.UserEntity;
 import com.example.bankcards.enums.CardStatus;
 import com.example.bankcards.exception.CardException;
+import com.example.bankcards.exception.NotFoundException;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.specification.CardSpecification;
 import com.example.bankcards.security.CurrentUserProvider;
@@ -12,7 +13,6 @@ import com.example.bankcards.service.CardService;
 import com.example.bankcards.service.UserService;
 import com.example.bankcards.util.CardEncryptor;
 import com.example.bankcards.util.CardNumberGenerator;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -56,21 +56,21 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardEntity block(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        CardEntity card = cardRepository.findById(id).orElseThrow(NotFoundException::new);
         card.block();
         return cardRepository.save(card);
     }
 
     @Override
     public CardEntity activate(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        CardEntity card = cardRepository.findById(id).orElseThrow(NotFoundException::new);
         card.activate();
         return cardRepository.save(card);
     }
 
     @Override
     public void delete(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        CardEntity card = cardRepository.findById(id).orElseThrow(NotFoundException::new);
         cardRepository.delete(card);
     }
 
@@ -92,7 +92,7 @@ public class CardServiceImpl implements CardService {
     }
     @Override
     public CardEntity getCard(Long id) {
-        return cardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return cardRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
 

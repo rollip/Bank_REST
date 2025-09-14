@@ -1,10 +1,10 @@
 package com.example.bankcards.service.impl;
 
 import com.example.bankcards.entity.UserEntity;
+import com.example.bankcards.exception.NotFoundException;
 import com.example.bankcards.exception.UserException;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,16 +20,16 @@ public class UserServiceImpl implements UserService {
 
 
     public UserEntity findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+        return userRepository.findByUsername(username).orElseThrow(NotFoundException::new);
     }
 
     public UserEntity findById(Long id) {
-        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return userRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new EntityNotFoundException();
+            throw new NotFoundException();
         }
         userRepository.deleteById(id);
     }
