@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1-create-user-table
+      id: create-user-table
       author: rollip
       changes:
         - createTable:
