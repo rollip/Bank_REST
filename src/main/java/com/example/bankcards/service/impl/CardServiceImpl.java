@@ -4,10 +4,7 @@ import com.example.bankcards.dto.request.card.CardFilterDto;
 import com.example.bankcards.entity.CardEntity;
 import com.example.bankcards.entity.UserEntity;
 import com.example.bankcards.enums.CardStatus;
-import com.example.bankcards.exception.card.CardAlreadyExistsException;
-import com.example.bankcards.exception.card.CardNotFoundException;
-import com.example.bankcards.exception.card.CardStatusException;
-import com.example.bankcards.exception.card.UnauthorizedCardAccessException;
+import com.example.bankcards.exception.CardException;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.specification.CardSpecification;
 import com.example.bankcards.security.CurrentUserProvider;
@@ -15,6 +12,7 @@ import com.example.bankcards.service.CardService;
 import com.example.bankcards.service.UserService;
 import com.example.bankcards.util.CardEncryptor;
 import com.example.bankcards.util.CardNumberGenerator;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -58,21 +56,21 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardEntity block(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(CardNotFoundException::new);
+        CardEntity card = cardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         card.block();
         return cardRepository.save(card);
     }
 
     @Override
     public CardEntity activate(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(CardNotFoundException::new);
+        CardEntity card = cardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         card.activate();
         return cardRepository.save(card);
     }
 
     @Override
     public void delete(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(CardNotFoundException::new);
+        CardEntity card = cardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         cardRepository.delete(card);
     }
 
@@ -94,7 +92,7 @@ public class CardServiceImpl implements CardService {
     }
     @Override
     public CardEntity getCard(Long id) {
-        return cardRepository.findById(id).orElseThrow(CardNotFoundException::new);
+        return cardRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
 
@@ -108,19 +106,19 @@ public class CardServiceImpl implements CardService {
 
     private void checkCardOwnership(Long userId, CardEntity card) {
         if (!card.getOwner().getId().equals(userId)) {
-            throw new UnauthorizedCardAccessException();
+            throw new CardException.UnauthorizedCardAccessException();
         }
     }
 
     private void checkCardNotBlocked(CardEntity card){
         if (card.getStatus().equals(CardStatus.BLOCKED)) {
-            throw new CardStatusException("Card is BLOCKED");
+            throw new CardException.CardStatusException("Card is BLOCKED");
         }
     }
 
     private void checkDuplicateCardNumber(String encryptedNumber){
         if (cardRepository.existsByNumber(encryptedNumber)) {
-            throw new CardAlreadyExistsException();
+            throw new CardException.CardAlreadyExistsException();
         }
     }
 

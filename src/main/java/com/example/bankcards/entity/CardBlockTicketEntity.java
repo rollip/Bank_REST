@@ -1,7 +1,7 @@
 package com.example.bankcards.entity;
 
 import com.example.bankcards.enums.CardBlockTicketStatus;
-import com.example.bankcards.exception.cardBlockTicket.CardBlockTicketStatusException;
+import com.example.bankcards.exception.CardBlockTicketException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -41,7 +41,7 @@ public class CardBlockTicketEntity {
 
     private void checkStatusPending(){
         if(!status.equals(CardBlockTicketStatus.PENDING)){
-            throw new CardBlockTicketStatusException("Status is not PENDING");
+            throw new CardBlockTicketException.CardBlockTicketStatusException("Status is not PENDING");
         }
     }
 

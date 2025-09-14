@@ -1,11 +1,13 @@
 package com.example.bankcards.entity;
 
 import com.example.bankcards.enums.CardStatus;
-import com.example.bankcards.exception.card.CardFundsExeption;
-import com.example.bankcards.exception.card.CardStatusException;
+import com.example.bankcards.exception.CardException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -66,20 +68,20 @@ public class CardEntity {
 
     private void ensureActive(){
         if (this.status != CardStatus.ACTIVE) {
-            throw new CardStatusException("Card is not active");
+            throw new CardException.CardStatusException("Card is not active");
         }
     }
 
     private void ensureBlocked(){
         if (this.status != CardStatus.BLOCKED) {
-            throw new CardStatusException("Card is not blocked");
+            throw new CardException.CardStatusException("Card is not blocked");
         }
     }
 
 
     private void ensureSufficientBalance(BigDecimal amount){
         if (this.balance.compareTo(amount) < 0) {
-            throw new CardFundsExeption("Insufficient funds");
+            throw new CardException.CardFundsException("Insufficient funds");
         }
     }
 

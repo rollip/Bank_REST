@@ -3,7 +3,7 @@ package com.example.bankcards.facade.impl;
 import com.example.bankcards.dto.request.transfer.TransferRequestDto;
 import com.example.bankcards.dto.response.transfer.TransferResponseDto;
 import com.example.bankcards.entity.CardEntity;
-import com.example.bankcards.exception.transfer.SameCardTransferException;
+import com.example.bankcards.exception.TransferException;
 import com.example.bankcards.facade.TransferFacade;
 import com.example.bankcards.mapper.TransferMapper;
 import com.example.bankcards.security.CurrentUserProvider;
@@ -42,7 +42,7 @@ public class TransferFacadeImpl implements TransferFacade {
 
     private void validateDifferentCards(CardEntity cardFrom, CardEntity cardTo) {
         if (cardFrom.getId().equals(cardTo.getId())) {
-            throw new SameCardTransferException();
+            throw new TransferException.SameCardTransferException();
         }
     }
 

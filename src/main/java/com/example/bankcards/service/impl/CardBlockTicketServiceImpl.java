@@ -3,13 +3,11 @@ package com.example.bankcards.service.impl;
 import com.example.bankcards.entity.CardBlockTicketEntity;
 import com.example.bankcards.entity.CardEntity;
 import com.example.bankcards.enums.CardBlockTicketStatus;
-import com.example.bankcards.exception.card.CardNotFoundException;
-import com.example.bankcards.exception.cardBlockTicket.CardBlockTicketNotFoundException;
-import com.example.bankcards.exception.cardBlockTicket.CardBlockTicketStatusException;
-import com.example.bankcards.exception.cardBlockTicket.TicketAlreadyExists;
+import com.example.bankcards.exception.CardBlockTicketException;
 import com.example.bankcards.repository.CardBlockTicketRepository;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.service.CardBlockTicketService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,7 @@ public class CardBlockTicketServiceImpl implements CardBlockTicketService {
     @Override
     public CardBlockTicketEntity create(Long cardId) {
         CardEntity card = cardRepository.findById(cardId)
-                .orElseThrow(CardNotFoundException::new);
+                .orElseThrow(EntityNotFoundException::new);
 
         checkNoPendingTicket(cardId);
 
@@ -37,7 +35,7 @@ public class CardBlockTicketServiceImpl implements CardBlockTicketService {
     @Override
     public CardBlockTicketEntity get(Long id) {
         return ticketRepository.findById(id)
-                .orElseThrow(CardBlockTicketNotFoundException::new);
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -63,14 +61,14 @@ public class CardBlockTicketServiceImpl implements CardBlockTicketService {
 
     private void checkIfPending(CardBlockTicketEntity ticket) {
         if(!ticket.getStatus().equals(CardBlockTicketStatus.PENDING)) {
-            throw new CardBlockTicketStatusException("Card block ticket status is not PENDING");
+            throw new CardBlockTicketException.CardBlockTicketStatusException("Card block ticket status is not PENDING");
         }
     }
 
     private void checkNoPendingTicket(Long cardId) {
         boolean hasPending = ticketRepository.existsByCardIdAndStatus(cardId, CardBlockTicketStatus.PENDING);
         if (hasPending) {
-            throw new TicketAlreadyExists();
+            throw new CardBlockTicketException.TicketAlreadyExists();
         }
     }
 }
