@@ -22,5 +22,5 @@ docker-compose up --build -d
 ```
 
 Приложение будет доступно по адресу:
-Основной сервис: [http://localhost:9099](http://localhost:9099)
-Swagger UI (документация API): [http://localhost:9099/swagger-ui/index.html](http://localhost:9099/swagger-ui/index.html)
+Основной сервис: [http://localhost:8080](http://localhost:8080)
+Swagger UI (документация API): [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
