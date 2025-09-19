@@ -2,10 +2,15 @@ databaseChangeLog:
   - changeSet:
       id: create-card-block-ticket-table
       author: rollip
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: card_block_ticket
+            schemaName: public
       changes:
         - createTable:
             tableName: card_block_ticket
-            ifNotExists: true
             columns:
               - column:
                   name: id
@@ -37,7 +42,7 @@ databaseChangeLog:
       id: create-card-fk
       author: rollip
       preConditions:
-        - not:
+          not:
             foreignKeyConstraintExists:
               foreignKeyName: fk_ccsr_card
               tableName: card_block_ticket

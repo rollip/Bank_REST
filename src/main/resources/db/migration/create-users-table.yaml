@@ -2,10 +2,15 @@ databaseChangeLog:
   - changeSet:
       id: create-user-table
       author: rollip
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: users
+            schemaName: public
       changes:
         - createTable:
             tableName: users
-            ifNotExists: true
             columns:
               - column:
                   name: id

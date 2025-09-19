@@ -2,10 +2,15 @@ databaseChangeLog:
     - changeSet:
           id: create-cards-table
           author: rollip
+          preConditions:
+            onFail: MARK_RAN
+            not:
+              tableExists:
+                tableName: cards
+                schemaName: public
           changes:
               - createTable:
                     tableName: cards
-                    ifNotExists: true
                     columns:
                         - column:
                               name: id
@@ -46,10 +51,10 @@ databaseChangeLog:
 
 
     - changeSet:
-        id: create-card-fk
+        id: create-card-owner-fk
         author: rollip
         preConditions:
-          - not:
+            not:
               foreignKeyConstraintExists:
                 foreignKeyName: fk_card_owner
                 tableName: cards
