@@ -6,7 +6,6 @@ import com.example.bankcards.dto.request.auth.RegisterRequest;
 import com.example.bankcards.facade.AuthFacade;
 import com.example.bankcards.security.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
 class AuthControllerValidationTest {
-
 
     private final String ROOT_URI = "/auth";
 
@@ -60,7 +58,6 @@ class AuthControllerValidationTest {
 
 
     @Test
-    @DisplayName("login_ShouldReturn400_WhenLoginIsBlank")
     void login_ShouldReturn400_WhenLoginIsBlank() throws Exception {
         LoginRequest request = new LoginRequest(" ", "password123");
 
@@ -71,7 +68,6 @@ class AuthControllerValidationTest {
     }
 
     @Test
-    @DisplayName("login_ShouldReturn400_WhenPasswordIsBlank")
     void login_ShouldReturn400_WhenPasswordIsBlank() throws Exception {
         LoginRequest request = new LoginRequest("testUser", " ");
 

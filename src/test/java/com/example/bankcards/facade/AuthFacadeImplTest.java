@@ -7,6 +7,7 @@ import com.example.bankcards.dto.response.auth.RegisterResponse;
 import com.example.bankcards.entity.UserEntity;
 import com.example.bankcards.facade.impl.AuthFacadeImpl;
 import com.example.bankcards.mapper.AuthMapper;
+import com.example.bankcards.security.CardUserDetails;
 import com.example.bankcards.security.JwtService;
 import com.example.bankcards.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +19,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthFacadeImplTest {
@@ -36,62 +40,57 @@ class AuthFacadeImplTest {
     private UserService userService;
 
     @Mock
-    private AuthMapper authMapper;
-
-    @Mock
-    private Authentication auth;
+    private Authentication authentication;
 
     @InjectMocks
     private AuthFacadeImpl authFacade;
 
-
+    private static final String USERNAME = "testUser";
+    private static final String PASSWORD = "password123";
+    private static final String JWT_TOKEN = "mocked-jwt-token";
+    private static final String ROLE_USER = "USER";
 
     private UserEntity userEntity;
-    private String generatedToken;
+    private UserDetails userDetails;
 
     @BeforeEach
     void setUp() {
-        userEntity = UserEntity.builder().username("testUser").build();
+        userEntity = UserEntity.builder()
+                .id(1L)
+                .username(USERNAME)
+                .build();
 
-        generatedToken = "mocked-jwt-token";
-
-        when(auth.getPrincipal()).thenReturn(User.builder()
-                .username("testUser")
-                .password("password123")
-                .roles("USER").build());
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
-        when(userService.findByUsername("testUser")).thenReturn(userEntity);
-        when(jwtService.generateToken(userEntity)).thenReturn(generatedToken);
-    }
-
-
-    @Test
-    void register_ShouldReturnRegisterResponseWithToken_WhenUserIsCreatedSuccessfully() {
-        RegisterRequest request = new RegisterRequest("testUser", "password123");
-        RegisterResponse expectedResponse = new RegisterResponse(generatedToken);
-
-        when(userService.create("testUser", "password123")).thenReturn(userEntity);
-        when(authMapper.toRegisterResponse(generatedToken)).thenReturn(expectedResponse);
-
-        RegisterResponse actualResponse = authFacade.register(request);
-
-        assertEquals(expectedResponse, actualResponse);
-        verify(userService).create("testUser", "password123");
-        verify(authMapper).toRegisterResponse(generatedToken);
+        userDetails = new CardUserDetails(1L, USERNAME,PASSWORD, List.of(ROLE_USER));
+        authFacade = new AuthFacadeImpl(authenticationManager,jwtService,userService,new AuthMapper());
     }
 
     @Test
-    void login_ShouldReturnLoginResponseWithToken_WhenCredentialsAreValid() {
-        LoginRequest request = new LoginRequest("testUser", "password123");
-        LoginResponse expectedResponse = new LoginResponse(generatedToken);
+    void register_ShouldReturnValidTokenAndCreateUser_WhenRequestIsValid() {
+        RegisterRequest request = new RegisterRequest(USERNAME, PASSWORD);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(authentication);
+        when(userService.findByUsername(USERNAME)).thenReturn(userEntity);
+        when(jwtService.generateToken(userEntity)).thenReturn(JWT_TOKEN);
+        when(userService.create(USERNAME, PASSWORD)).thenReturn(userEntity);
 
-        when(authMapper.toLoginResponse(generatedToken)).thenReturn(expectedResponse);
+        RegisterResponse response = authFacade.register(request);
 
-        LoginResponse actualResponse = authFacade.login(request);
-
-        assertEquals(expectedResponse, actualResponse);
-        verify(authMapper).toLoginResponse(generatedToken);
+        assertEquals(JWT_TOKEN, response.getToken());
     }
 
+    @Test
+    void login_ShouldReturnValidTokenAndAuthenticateUser_WhenCredentialsAreValid() {
+        LoginRequest request = new LoginRequest(USERNAME, PASSWORD);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(authentication);
+        when(userService.findByUsername(USERNAME)).thenReturn(userEntity);
+        when(jwtService.generateToken(userEntity)).thenReturn(JWT_TOKEN);
+
+        LoginResponse response = authFacade.login(request);
+
+        assertEquals(JWT_TOKEN, response.getToken());
+    }
 }
 

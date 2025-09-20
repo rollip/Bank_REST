@@ -6,7 +6,6 @@ import com.example.bankcards.dto.response.auth.LoginResponse;
 import com.example.bankcards.dto.response.auth.RegisterResponse;
 import com.example.bankcards.facade.AuthFacade;
 import com.example.bankcards.security.JwtAuthFilter;
-import com.example.bankcards.security.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -40,9 +39,6 @@ public class AuthControllerTest {
     private AuthFacade authFacade;
 
     @MockitoBean
-    private JwtService jwtService;
-
-    @MockitoBean
     private JwtAuthFilter jwtAuthFilter;
 
     @Test
@@ -50,7 +46,7 @@ public class AuthControllerTest {
         RegisterRequest request = new RegisterRequest("testUser", "password123");
         RegisterResponse response = new RegisterResponse("mocked-jwt-token");
 
-        Mockito.when(authFacade.register(Mockito.any(RegisterRequest.class)))
+        when(authFacade.register(Mockito.any(RegisterRequest.class)))
                 .thenReturn(response);
 
         mvc.perform(post(ROOT_URI+"/register")
