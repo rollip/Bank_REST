@@ -59,6 +59,7 @@ public class CardController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Card created and returned in body"),
             @ApiResponse(responseCode = "403", description = "Forbidden — user lacks required role"),
+            @ApiResponse(responseCode = "404", description = "Card owner is not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
@@ -72,6 +73,7 @@ public class CardController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Card blocked"),
             @ApiResponse(responseCode = "403", description = "Forbidden — user lacks required role"),
+            @ApiResponse(responseCode = "404", description = "Card not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/{id}/block")
@@ -85,6 +87,7 @@ public class CardController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Card activated"),
             @ApiResponse(responseCode = "403", description = "Forbidden — user lacks required role"),
+            @ApiResponse(responseCode = "404", description = "Card not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/{id}/activate")
@@ -96,8 +99,9 @@ public class CardController {
 
     @Operation(summary = "Delete card")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Card deleted"),
+            @ApiResponse(responseCode = "204", description = "Card deleted"),
             @ApiResponse(responseCode = "403", description = "Forbidden — user lacks required role"),
+            @ApiResponse(responseCode = "404", description = "Card not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @DeleteMapping("/{id}")

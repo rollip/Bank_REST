@@ -39,6 +39,7 @@ public class CardBlockTicketController {
     @Operation(summary = "Approve existing card block ticket")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ticket approved"),
+            @ApiResponse(responseCode = "403", description = "Forbidden — user lacks required role"),
             @ApiResponse(responseCode = "404", description = "Ticket not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
@@ -53,6 +54,7 @@ public class CardBlockTicketController {
     @Operation(summary = "Reject existing card block ticket")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ticket rejected"),
+            @ApiResponse(responseCode = "403", description = "Forbidden — user lacks required role"),
             @ApiResponse(responseCode = "404", description = "Ticket not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })

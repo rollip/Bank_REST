@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransferController {
 
     private final TransferFacade facade;
-    @Operation(summary = "Reject existing card block ticket")
+    @Operation(summary = "Transfer funds")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ticket rejected"),
-            @ApiResponse(responseCode = "404", description = "Ticket not found"),
+            @ApiResponse(responseCode = "200", description = "Transfer success"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
