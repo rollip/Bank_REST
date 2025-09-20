@@ -20,7 +20,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 @Tag(name = "Cards", description = "Cards management")
 @SecurityRequirement(name = "BearerAuth")
 @RequiredArgsConstructor
@@ -36,11 +35,10 @@ public class CardController {
             @ApiResponse(responseCode = "400", description = "Invalid request body"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @GetMapping
-    public ResponseEntity<Page<CardDto>> getCards(Pageable pageable,
-                                                  @RequestBody(required = false) Optional<CardFilterDto> filterDto){
-        CardFilterDto filter = filterDto.orElse(new CardFilterDto());
-        Page<CardDto> dtos = facade.getCardsForUser(filter, pageable);
+    @PostMapping("/search")
+    public ResponseEntity<Page<CardDto>> getCardsForCurrentUser(Pageable pageable,
+                                                  @RequestBody(required = false) CardFilterDto filterDto){
+        Page<CardDto> dtos = facade.getCardsForCurrentUser(filterDto, pageable);
         return ResponseEntity.ok().body(dtos);
     }
 

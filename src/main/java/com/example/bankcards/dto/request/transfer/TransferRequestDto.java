@@ -3,11 +3,13 @@ package com.example.bankcards.dto.request.transfer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 public class TransferRequestDto {
 
     @NotNull(message = "fromCardId can't be null")

@@ -34,8 +34,8 @@ public class TransferFacadeImpl implements TransferFacade {
 
         validateDifferentCards(cardFrom, cardTo);
 
-        cardFrom.withdraw(amount);
-        cardTo.deposit(amount);
+        cardService.withdraw(cardFrom.getId(), amount);
+        cardService.deposit(cardTo.getId(), amount);
 
         return transferMapper.toResponse(cardFrom, "SUCCESS");
     }

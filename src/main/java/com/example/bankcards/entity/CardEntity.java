@@ -4,10 +4,7 @@ import com.example.bankcards.enums.CardStatus;
 import com.example.bankcards.exception.CardException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,7 +12,7 @@ import java.time.LocalDate;
 
 @Builder
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="cards")

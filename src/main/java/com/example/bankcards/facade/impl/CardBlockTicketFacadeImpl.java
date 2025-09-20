@@ -26,8 +26,8 @@ public class CardBlockTicketFacadeImpl implements CardBlockTicketFacade {
 
     @Override
     public CreateCardBlockTicketResponseDto create(CreateCardBlockTicketRequestDto requestDto){
-        cardService.getValidCard(requestDto.getCardId(), currentUserProvider.getUserId());
-        CardBlockTicketEntity entity =  ticketService.create(requestDto.getCardId());
+        CardEntity card = cardService.getValidCard(requestDto.getCardId(), currentUserProvider.getUserId());
+        CardBlockTicketEntity entity =  ticketService.create(card);
         return mapper.toCreateResponse(entity);
     }
 
@@ -35,19 +35,18 @@ public class CardBlockTicketFacadeImpl implements CardBlockTicketFacade {
     public CardBlockTicketStatus approve(Long id){
 
         CardBlockTicketEntity ticket = ticketService.getIfPending(id);
+        CardBlockTicketStatus newStatus =  ticketService.approve(ticket.getId());
 
-        Long cardId = ticketService.get(id).getCard().getId();
-        ticketService.approve(id);
+        Long cardId = ticket.getCard().getId();
+        cardService.block(cardId);
 
-        CardEntity card = cardService.getCard(cardId);
-        card.block();
-
-        return ticket.getStatus();
+        return newStatus;
     }
 
     @Override
     public CardBlockTicketStatus reject(Long id){
-        return ticketService.reject(id);
+        CardBlockTicketEntity ticket = ticketService.getIfPending(id);
+        return ticketService.reject(ticket.getId());
     }
 
 

@@ -8,9 +8,7 @@ import com.example.bankcards.exception.CardException;
 import com.example.bankcards.exception.NotFoundException;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.specification.CardSpecification;
-import com.example.bankcards.security.CurrentUserProvider;
 import com.example.bankcards.service.CardService;
-import com.example.bankcards.service.UserService;
 import com.example.bankcards.util.CardEncryptor;
 import com.example.bankcards.util.CardNumberGenerator;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +17,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CardServiceImpl implements CardService {
 
     private final CardEncryptor encryptor;
     private final CardNumberGenerator generator;
-    private final UserService userService;
     private final CardRepository cardRepository;
-    private final CurrentUserProvider currentUserProvider;
 
 
     @Value("${application.card.expiry-period-years}")
@@ -39,10 +39,7 @@ public class CardServiceImpl implements CardService {
 
 
     @Override
-    public CardEntity create(Long id) {
-
-        UserEntity user = userService.findById(id);
-
+    public CardEntity create(UserEntity user) {
         String encryptedNumber = encryptor.encrypt(generator.generateCardNumber());
         checkDuplicateCardNumber(encryptedNumber);
         CardEntity card = CardEntity.builder()
@@ -55,22 +52,37 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardEntity block(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(NotFoundException::new);
+    public CardStatus block(Long id) {
+        CardEntity card = getCard(id);
         card.block();
-        return cardRepository.save(card);
+        return cardRepository.save(card).getStatus();
     }
 
     @Override
-    public CardEntity activate(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(NotFoundException::new);
+    public CardStatus activate(Long id) {
+        CardEntity card = getCard(id);
         card.activate();
-        return cardRepository.save(card);
+        return cardRepository.save(card).getStatus();
     }
+
+    @Override
+    public BigDecimal deposit(Long id, BigDecimal amount) {
+        CardEntity card = getCard(id);
+        card.deposit(amount);
+        return cardRepository.save(card).getBalance();
+    }
+
+    @Override
+    public BigDecimal withdraw(Long id, BigDecimal amount) {
+        CardEntity card = getCard(id);
+        card.withdraw(amount);
+        return cardRepository.save(card).getBalance();
+    }
+
 
     @Override
     public void delete(Long id) {
-        CardEntity card = cardRepository.findById(id).orElseThrow(NotFoundException::new);
+        CardEntity card = getCard(id);
         cardRepository.delete(card);
     }
 
@@ -80,8 +92,10 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Page<CardEntity> getCardsForUser(CardFilterDto filterDto, Pageable pageable) {
-        Long userId = currentUserProvider.getUserId();
+    public Page<CardEntity> getCardsForUser(CardFilterDto filterDto, Pageable pageable, Long userId) {
+        if (Objects.isNull(filterDto)){
+           return cardRepository.findByOwner_Id(userId, pageable);
+        }
         Specification<CardEntity> spec = CardSpecification.ownerById(userId)
                 .and(CardSpecification.balanceLTE(filterDto.getMaxBalance()))
                 .and(CardSpecification.balanceGTE(filterDto.getMinBalance()))
@@ -90,6 +104,7 @@ public class CardServiceImpl implements CardService {
                 .and(CardSpecification.numberLike(filterDto.getNumber()));
         return cardRepository.findAll(spec, pageable);
     }
+
     @Override
     public CardEntity getCard(Long id) {
         return cardRepository.findById(id).orElseThrow(NotFoundException::new);
