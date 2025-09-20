@@ -44,7 +44,7 @@ databaseChangeLog:
       preConditions:
           not:
             foreignKeyConstraintExists:
-              foreignKeyName: fk_ccsr_card
+              foreignKeyName: fk_card_block_ticket_card
               tableName: card_block_ticket
           onFail: MARK_RAN
       changes:
@@ -53,13 +53,13 @@ databaseChangeLog:
             baseColumnNames: card_id
             referencedTableName: cards
             referencedColumnNames: id
-            constraintName: fk_ccsr_card
+            constraintName: fk_card_block_ticket_card
             onDelete: CASCADE
             onUpdate: CASCADE
       rollback:
         - dropForeignKeyConstraint:
             baseTableName: card_block_ticket
-            constraintName: fk_ccsr_card
+            constraintName: fk_card_block_ticket_card
 
 
 
