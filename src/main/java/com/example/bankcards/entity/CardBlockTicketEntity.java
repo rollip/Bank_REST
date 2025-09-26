@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name="card_block_ticket")
+@Table(name = "card_block_ticket")
 public class CardBlockTicketEntity {
 
     @Id
@@ -39,8 +39,8 @@ public class CardBlockTicketEntity {
         this.status = CardBlockTicketStatus.REJECTED;
     }
 
-    private void checkStatusPending(){
-        if(!status.equals(CardBlockTicketStatus.PENDING)){
+    private void checkStatusPending() {
+        if (!status.equals(CardBlockTicketStatus.PENDING)) {
             throw new CardBlockTicketException.CardBlockTicketStatusException("Status is not PENDING");
         }
     }

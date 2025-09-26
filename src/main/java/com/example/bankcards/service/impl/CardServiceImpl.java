@@ -93,8 +93,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Page<CardEntity> getCardsForUser(CardFilterDto filterDto, Pageable pageable, Long userId) {
-        if (Objects.isNull(filterDto)){
-           return cardRepository.findByOwner_Id(userId, pageable);
+        if (Objects.isNull(filterDto)) {
+            return cardRepository.findByOwner_Id(userId, pageable);
         }
         Specification<CardEntity> spec = CardSpecification.ownerById(userId)
                 .and(CardSpecification.balanceLTE(filterDto.getMaxBalance()))
@@ -125,13 +125,13 @@ public class CardServiceImpl implements CardService {
         }
     }
 
-    private void checkCardNotBlocked(CardEntity card){
+    private void checkCardNotBlocked(CardEntity card) {
         if (card.getStatus().equals(CardStatus.BLOCKED)) {
             throw new CardException.CardStatusException("Card is BLOCKED");
         }
     }
 
-    private void checkDuplicateCardNumber(String encryptedNumber){
+    private void checkDuplicateCardNumber(String encryptedNumber) {
         if (cardRepository.existsByNumber(encryptedNumber)) {
             throw new CardException.CardAlreadyExistsException();
         }

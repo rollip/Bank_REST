@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Tag(name = "Cards", description = "Cards management")
 @SecurityRequirement(name = "BearerAuth")
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class CardController {
     })
     @PostMapping("/search")
     public ResponseEntity<Page<CardDto>> getCardsForCurrentUser(Pageable pageable,
-                                                  @RequestBody(required = false) CardFilterDto filterDto){
+                                                                @RequestBody(required = false) CardFilterDto filterDto) {
         Page<CardDto> dtos = facade.getCardsForCurrentUser(filterDto, pageable);
         return ResponseEntity.ok().body(dtos);
     }
@@ -50,7 +51,7 @@ public class CardController {
     })
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<CardDto>> getAllCards(){
+    public ResponseEntity<List<CardDto>> getAllCards() {
         List<CardDto> dtos = facade.getAllCards();
         return ResponseEntity.ok().body(dtos);
     }
@@ -64,8 +65,8 @@ public class CardController {
     })
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CreateCardResponseDto> create(@RequestBody @Valid CreateCardRequestDto request){
-        CreateCardResponseDto dto =  facade.create(request);
+    public ResponseEntity<CreateCardResponseDto> create(@RequestBody @Valid CreateCardRequestDto request) {
+        CreateCardResponseDto dto = facade.create(request);
         return ResponseEntity.ok().body(dto);
     }
 
@@ -78,8 +79,8 @@ public class CardController {
     })
     @PostMapping("/{id}/block")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CardStatus> block(@PathVariable Long id){
-        CardStatus status =  facade.block(id);
+    public ResponseEntity<CardStatus> block(@PathVariable Long id) {
+        CardStatus status = facade.block(id);
         return ResponseEntity.ok().body(status);
     }
 
@@ -92,8 +93,8 @@ public class CardController {
     })
     @PostMapping("/{id}/activate")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CardStatus> activate(@PathVariable Long id){
-        CardStatus status =  facade.activate(id);
+    public ResponseEntity<CardStatus> activate(@PathVariable Long id) {
+        CardStatus status = facade.activate(id);
         return ResponseEntity.ok(status);
     }
 
@@ -106,7 +107,7 @@ public class CardController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         facade.delete(id);
         return ResponseEntity.noContent().build();
     }

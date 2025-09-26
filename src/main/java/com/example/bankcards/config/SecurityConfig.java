@@ -26,24 +26,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtAuthFilter jwtAuthFilter;
     @Value("#{'${application.allowed-origins}'.split(',')}")
     private List<String> allowedOrigins;
-
     @Value("#{'${application.no-auth-endpoints}'.split(',')}")
     private String[] whitelist;
 
-    private final JwtAuthFilter jwtAuthFilter;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http.csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(auth -> auth
-                            .requestMatchers(whitelist).permitAll()
-                            .anyRequest().authenticated()
-                    )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(whitelist).permitAll()
+                        .anyRequest().authenticated()
+                )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

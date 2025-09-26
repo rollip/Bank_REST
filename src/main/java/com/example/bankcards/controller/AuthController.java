@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthFacade facade;
+
     @Operation(
             summary = "Register a new user",
             description = "Registers a new user account and returns a JWT token in the Authorization header."
@@ -53,10 +54,10 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = facade.login(request);
         return ResponseEntity.ok()
-                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + response.getToken())
-                                .body(response);
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + response.getToken())
+                .body(response);
     }
 }

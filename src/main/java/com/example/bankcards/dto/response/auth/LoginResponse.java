@@ -9,6 +9,6 @@ import lombok.Data;
 @Schema(description = "Response returned after successful login, contains JWT token")
 public class LoginResponse {
     @Schema(description = "JWT token (in auth header too)",
-           example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+            example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
     private String token;
 }

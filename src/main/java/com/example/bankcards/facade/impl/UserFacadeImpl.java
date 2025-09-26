@@ -12,7 +12,7 @@ public class UserFacadeImpl implements UserFacade {
     private final UserService userService;
 
     @Override
-    public void delete(Long id){
+    public void delete(Long id) {
         userService.delete(id);
     }
 }

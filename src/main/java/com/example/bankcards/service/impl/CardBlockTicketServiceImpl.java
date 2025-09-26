@@ -57,7 +57,7 @@ public class CardBlockTicketServiceImpl implements CardBlockTicketService {
     }
 
     private void checkIfPending(CardBlockTicketEntity ticket) {
-        if(!ticket.getStatus().equals(CardBlockTicketStatus.PENDING)) {
+        if (!ticket.getStatus().equals(CardBlockTicketStatus.PENDING)) {
             throw new CardBlockTicketException.CardBlockTicketStatusException("Card block ticket status is not PENDING");
         }
     }

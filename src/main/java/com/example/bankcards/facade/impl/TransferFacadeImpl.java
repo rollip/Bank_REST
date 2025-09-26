@@ -26,11 +26,11 @@ public class TransferFacadeImpl implements TransferFacade {
     @Override
     public TransferResponseDto transferInternal(TransferRequestDto request) {
 
-        Long ownerId =  currentUserProvider.getUserId();
+        Long ownerId = currentUserProvider.getUserId();
         BigDecimal amount = request.getAmount();
 
-        CardEntity cardFrom =  cardService.getValidCard(ownerId, request.getFromCardId());
-        CardEntity cardTo =  cardService.getValidCard(ownerId, request.getToCardId());
+        CardEntity cardFrom = cardService.getValidCard(ownerId, request.getFromCardId());
+        CardEntity cardTo = cardService.getValidCard(ownerId, request.getToCardId());
 
         validateDifferentCards(cardFrom, cardTo);
 

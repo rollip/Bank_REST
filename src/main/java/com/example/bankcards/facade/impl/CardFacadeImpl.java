@@ -30,7 +30,7 @@ public class CardFacadeImpl implements CardFacade {
     @Override
     public Page<CardDto> getCardsForCurrentUser(CardFilterDto filterDto, Pageable pageable) {
         Long userId = currentUserProvider.getUserId();
-        return cardService.getCardsForUser(filterDto, pageable,userId)
+        return cardService.getCardsForUser(filterDto, pageable, userId)
                 .map(mapper::toDto);
     }
 
@@ -59,7 +59,9 @@ public class CardFacadeImpl implements CardFacade {
     }
 
     @Override
-    public void delete(Long cardId) {cardService.delete(cardId);}
+    public void delete(Long cardId) {
+        cardService.delete(cardId);
+    }
 }
 
 

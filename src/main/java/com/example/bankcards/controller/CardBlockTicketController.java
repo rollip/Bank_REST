@@ -31,7 +31,7 @@ public class CardBlockTicketController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
-    public ResponseEntity<CreateCardBlockTicketResponseDto> create (@Valid @RequestBody CreateCardBlockTicketRequestDto request) {
+    public ResponseEntity<CreateCardBlockTicketResponseDto> create(@Valid @RequestBody CreateCardBlockTicketRequestDto request) {
         CreateCardBlockTicketResponseDto dto = facade.create(request);
         return ResponseEntity.ok().body(dto);
     }
@@ -45,7 +45,7 @@ public class CardBlockTicketController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/approve")
-    public ResponseEntity<CardBlockTicketStatus> approve (@PathVariable Long id) {
+    public ResponseEntity<CardBlockTicketStatus> approve(@PathVariable Long id) {
         CardBlockTicketStatus status = facade.approve(id);
         return ResponseEntity.ok().body(status);
     }
@@ -60,7 +60,7 @@ public class CardBlockTicketController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/reject")
-    public ResponseEntity<CardBlockTicketStatus> reject (@PathVariable Long id) {
+    public ResponseEntity<CardBlockTicketStatus> reject(@PathVariable Long id) {
         CardBlockTicketStatus status = facade.reject(id);
         return ResponseEntity.ok().body(status);
     }

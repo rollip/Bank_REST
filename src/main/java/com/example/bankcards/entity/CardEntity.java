@@ -4,7 +4,10 @@ import com.example.bankcards.enums.CardStatus;
 import com.example.bankcards.exception.CardException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,7 +18,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="cards")
+@Table(name = "cards")
 public class CardEntity {
 
     @Id
@@ -42,7 +45,7 @@ public class CardEntity {
     @JoinColumn(nullable = false)
     private UserEntity owner;
 
-    public void block(){
+    public void block() {
         ensureActive();
         status = CardStatus.BLOCKED;
     }
@@ -63,26 +66,24 @@ public class CardEntity {
         balance = balance.subtract(amount);
     }
 
-    private void ensureActive(){
+    private void ensureActive() {
         if (this.status != CardStatus.ACTIVE) {
             throw new CardException.CardStatusException("Card is not active");
         }
     }
 
-    private void ensureBlocked(){
+    private void ensureBlocked() {
         if (this.status != CardStatus.BLOCKED) {
             throw new CardException.CardStatusException("Card is not blocked");
         }
     }
 
 
-    private void ensureSufficientBalance(BigDecimal amount){
+    private void ensureSufficientBalance(BigDecimal amount) {
         if (this.balance.compareTo(amount) < 0) {
             throw new CardException.CardFundsException("Insufficient funds");
         }
     }
-
-
 
 
 }

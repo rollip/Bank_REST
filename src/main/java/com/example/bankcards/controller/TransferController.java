@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 @Tag(name = "Transfers", description = "Funds transfer")
 @SecurityRequirement(name = "BearerAuth")
 @RestController
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransferController {
 
     private final TransferFacade facade;
+
     @Operation(summary = "Transfer funds")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Transfer success"),

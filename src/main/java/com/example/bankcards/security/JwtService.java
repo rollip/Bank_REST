@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
+
 @Service
 public class JwtService {
 
@@ -53,11 +54,11 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public Long extractUid(String token)  {
+    public Long extractUid(String token) {
         return extractClaim(token, claims -> claims.get("uid", Long.class));
     }
 
-    public String extractRole(String token)  {
+    public String extractRole(String token) {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
 

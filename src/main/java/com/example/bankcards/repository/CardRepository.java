@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CardRepository extends JpaRepository<CardEntity, Long>, JpaSpecificationExecutor<CardEntity> {
     Boolean existsByNumber(String cardNumber);
+
     Page<CardEntity> findByOwner_Id(Long userId, Pageable pageable);
 }

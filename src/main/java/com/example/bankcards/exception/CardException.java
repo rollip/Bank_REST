@@ -12,7 +12,7 @@ public abstract class CardException extends RuntimeException {
         }
     }
 
-    public static class CardStatusException extends CardException  {
+    public static class CardStatusException extends CardException {
         public CardStatusException(String message) {
             super(message);
         }
